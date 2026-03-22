@@ -29,7 +29,7 @@
           <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
           <div class="card__meta">
             <span>{{ .Date.Format "Jan 2, 2006" }}</span>
-            {{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ range first 2 (.Params.tags | default slice) }}<span class="tag">{{ . }}</span>{{ end }}
           </div>
         </div>
       </a>
