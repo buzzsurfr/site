@@ -1,26 +1,126 @@
 {{ define "main" }}
-<div class="page-hero">
-  <div class="container container--narrow">
+<div class="page-hero" style="{{ if .Params.image }}background-image:url('{{ .Params.image }}');background-size:cover;background-position:center;position:relative;{{ end }}">
+  {{ if .Params.image }}
+  <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(15,23,42,0.95) 40%, rgba(15,23,42,0.6) 100%);"></div>
+  {{ end }}
+  <div class="container container--narrow" style="position:relative;z-index:1;">
     {{ if .Params.categories }}<div class="page-hero__label">{{ index .Params.categories 0 }}</div>{{ end }}
     <h1 class="page-hero__title" style="font-size:clamp(1.5rem,3vw,2.5rem);">{{ .Title }}</h1>
-    <div class="card__meta" style="margin-top:1rem;">
-      {{ range .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
-      {{ if .Params.build_time }}<span>⏱ {{ .Params.build_time }}</span>{{ end }}
-      {{ if .Params.cost }}<span>💰 {{ .Params.cost }}</span>{{ end }}
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-top:1rem;">
+
+      <!-- Tags — bottom left -->
+      <div class="card__meta" style="flex:1;">
+        {{ range .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+        {{ if .Params.project_type }}<span class="tag tag--blue">{{ .Params.project_type }}</span>{{ end }}
+        {{ if .Params.status }}<span class="tag">{{ .Params.status }}</span>{{ end }}
+      </div>
+
+      <!-- Platform icons — bottom right -->
+      {{ if .Params.platform_links }}
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0;">
+        {{ range .Params.platform_links }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" title="{{ .platform }}"
+           style="display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border:1px solid rgba(255,255,255,0.2);border-radius:4px;background:rgba(15,23,42,0.6);transition:all 0.2s ease;"
+           onmouseover="this.style.borderColor='var(--green)';this.style.background='var(--green-glow)'"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.background='rgba(15,23,42,0.6)'">
+          {{- $platform := .platform | lower | replaceRE " " "" -}}
+          {{- $slugMap := dict "makerworld" "bambulab" -}}
+          {{- $slug := index $slugMap $platform | default $platform -}}
+          <img src="https://cdn.simpleicons.org/{{ $slug }}/ffffff" width="16" height="16" alt="{{ .platform }}">
+        </a>
+        {{ end }}
+      </div>
+      {{ end }}
+
     </div>
   </div>
 </div>
-
-{{ if .Params.image }}
-<div class="container" style="margin-top:-1rem;margin-bottom:3rem;">
-  <img src="{{ .Params.image }}" alt="{{ .Title }}" style="width:100%;max-height:480px;object-fit:cover;border-radius:8px;border:1px solid var(--border-subtle);">
-</div>
-{{ end }}
 
 <section style="padding-top:2rem;">
   <div class="container">
     <div class="post-content">
       {{ .Content }}
+
+      {{ if .Params.platform_links }}
+      <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border-subtle);">
+        <h3 style="transform:skewX(-15deg);display:block;margin-bottom:1rem;font-size:1rem;">Find it on</h3>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          {{ range .Params.platform_links }}
+          <a href="{{ .url }}" target="_blank" rel="noopener" class="btn btn--outline" style="font-size:0.65rem;">
+            {{ .platform }} →
+          </a>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+
+      {{ if .Params.original_designer }}
+      <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.25rem;">Original Design</span>
+        {{ if .Params.original_design_url }}
+        <a href="{{ .Params.original_design_url }}" target="_blank" rel="noopener" style="color:var(--text);">{{ .Params.original_designer }}</a>
+        {{ else }}
+        <span style="color:var(--text-dim);">{{ .Params.original_designer }}</span>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      {{ if .Params.gallery }}
+      <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-subtle);">
+        <h3 style="transform:skewX(-15deg);display:block;margin-bottom:1.5rem;font-size:1rem;">Project Photos</h3>
+        <div class="grid-3" style="gap:0.75rem;">
+          {{ range $i, $img := .Params.gallery }}
+          <div onclick="openModal('{{ $img }}')" style="cursor:pointer;border-radius:8px;overflow:hidden;border:1px solid var(--border-subtle);aspect-ratio:4/3;background:var(--navy-light);transition:border-color 0.2s ease;"
+               onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+            <img src="{{ $img }}" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+
+      <!-- Modal -->
+      <div id="photo-modal" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center;padding:2rem;">
+        <button onclick="closeModal()" style="position:absolute;top:1.5rem;right:1.5rem;background:none;border:1px solid var(--border);color:var(--text);width:2.5rem;height:2.5rem;border-radius:4px;cursor:pointer;font-size:1.2rem;z-index:1001;">✕</button>
+        <button onclick="event.stopPropagation();navigateModal(-1)" style="position:absolute;left:1.5rem;background:none;border:1px solid var(--border);color:var(--text);width:2.5rem;height:2.5rem;border-radius:4px;cursor:pointer;font-size:1.2rem;z-index:1001;">‹</button>
+        <img id="modal-img" src="" style="max-width:85vw;max-height:85vh;border-radius:8px;border:1px solid var(--border);box-shadow:0 0 60px rgba(0,0,0,0.8);pointer-events:none;">
+        <button onclick="event.stopPropagation();navigateModal(1)" style="position:absolute;right:1.5rem;background:none;border:1px solid var(--border);color:var(--text);width:2.5rem;height:2.5rem;border-radius:4px;cursor:pointer;font-size:1.2rem;z-index:1001;">›</button>
+        <div id="modal-counter" style="position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);"></div>
+      </div>
+
+      <script>
+      const galleryImages = [{{ range .Params.gallery }}"{{ . }}",{{ end }}];
+      let currentIndex = 0;
+
+      function openModal(src) {
+        currentIndex = galleryImages.indexOf(src);
+        updateModal();
+        const modal = document.getElementById('photo-modal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        document.getElementById('photo-modal').style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      function navigateModal(dir) {
+        currentIndex = (currentIndex + dir + galleryImages.length) % galleryImages.length;
+        updateModal();
+      }
+      function updateModal() {
+        document.getElementById('modal-img').src = galleryImages[currentIndex];
+        document.getElementById('modal-counter').textContent = (currentIndex + 1) + ' / ' + galleryImages.length;
+      }
+      document.addEventListener('keydown', e => {
+        const modal = document.getElementById('photo-modal');
+        if (modal.style.display === 'none') return;
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowRight') navigateModal(1);
+        if (e.key === 'ArrowLeft') navigateModal(-1);
+      });
+      </script>
+
       <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
         <a href="/portfolio/" class="btn btn--ghost">← All Projects</a>
         {{ if .Params.build_log }}<a href="{{ .Params.build_log }}" class="btn btn--outline">Read the Build Log →</a>{{ end }}

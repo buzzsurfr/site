@@ -35,7 +35,9 @@
           <span class="card__title">{{ .Title }}</span>
           <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
           <div class="card__meta">
-            {{ range first 3 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ if .Params.project_type }}<span class="tag tag--blue">{{ .Params.project_type }}</span>{{ end }}
+            {{ if .Params.status }}<span class="tag">{{ .Params.status }}</span>{{ end }}
+            {{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
             {{ if .Params.cost }}<span>{{ .Params.cost }}</span>{{ end }}
           </div>
         </div>
