@@ -37,7 +37,7 @@
           <div class="card__meta">
             {{ if .Params.project_type }}<span class="tag tag--blue">{{ .Params.project_type }}</span>{{ end }}
             {{ if .Params.status }}<span class="tag">{{ .Params.status }}</span>{{ end }}
-            {{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ if .Params.tags }}{{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}{{ end }}
             {{ if .Params.cost }}<span>{{ .Params.cost }}</span>{{ end }}
           </div>
         </div>
