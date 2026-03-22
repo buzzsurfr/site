@@ -13,7 +13,7 @@ I've been tinkering my whole life — 3D printing, electronics, Arduino projects
 
 ## What this site is
 
-A place where I put the things I'm working on. Build logs with the failures included. Project showcases for the things that actually worked. Honest reviews of tools and materials I've tried. Quick tips when I figure out a better way to do something. And project jumps — because yes, I switch projects a lot, and I'm not apologizing for it.
+A place where I put the things I'm working on. Behind-the-build posts, failures included. Project showcases for the things that actually worked. Honest reviews of tools and materials I've tried. Quick tips when I figure out a better way to do something. And project jumps — because yes, I switch projects a lot, and I'm not apologizing for it.
 
 ## What this site isn't
 

@@ -1,5 +1,7 @@
 # Teddy Spark — teddyspark.co
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5139b5cc-6f53-459b-b698-db0d1f653628/deploy-status)](https://app.netlify.com/projects/resilient-rugelach-110f76/deploys)
+
 Hugo site with Decap CMS, deployed on Netlify.
 
 ## Stack

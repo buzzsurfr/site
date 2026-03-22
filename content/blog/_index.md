@@ -1,4 +1,4 @@
 ---
 title: "Blog"
-description: "Build logs, quick tips, project jumps, and honest reviews."
+description: "Behind the build, quick tips, project jumps, and honest reviews."
 ---

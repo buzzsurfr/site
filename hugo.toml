@@ -4,7 +4,7 @@ title = "Teddy Spark"
 
 [params]
   tagline = "Making useful things, one spark at a time."
-  description = "Build logs, project showcases, quick tips, and honest reviews from a lifelong tinkerer."
+  description = "Behind the build, project showcases, quick tips, and honest reviews from a lifelong tinkerer."
   author = "Teddy Spark"
   youtube = "#" # "https://youtube.com/@teddyspark"
 
@@ -25,10 +25,6 @@ title = "Teddy Spark"
     name = "Contact"
     url = "/contact/"
     weight = 5
-  [[menu.main]]
-    name = "Shop"
-    url = "/shop/"
-    weight = 6
 
 [taxonomies]
   tag = "tags"

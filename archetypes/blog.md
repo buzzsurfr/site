@@ -2,7 +2,7 @@
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 draft: true
-categories: ["Build Logs"]
+categories: ["Builds"]
 tags: []
 description: ""
 image: ""

@@ -2,8 +2,8 @@
 <div class="page-hero">
   <div class="container">
     <div class="page-hero__label">The blog</div>
-    <h1 class="page-hero__title">Build Logs & More</h1>
-    <p class="page-hero__subtitle">Build logs, quick tips, project jumps, and honest reviews. No hype, no polish — just what I'm making and learning.</p>
+    <h1 class="page-hero__title">Behind the Build & More</h1>
+    <p class="page-hero__subtitle">Behind the build, quick tips, project jumps, and honest reviews. No hype, no polish — just what I'm making and learning.</p>
   </div>
 </div>
 
@@ -11,7 +11,7 @@
   <div class="container">
     <div class="filter-bar">
       <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'build-logs')">Build Logs</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'builds')">Behind the Build</button>
       <button class="filter-btn" onclick="filterPosts(this, 'project-showcases')">Project Showcases</button>
       <button class="filter-btn" onclick="filterPosts(this, 'quick-tips')">Quick Tips</button>
       <button class="filter-btn" onclick="filterPosts(this, 'project-jumps')">Project Jumps</button>
@@ -34,7 +34,7 @@
         </div>
       </a>
       {{ else }}
-      <div class="card"><div class="card__body"><span class="card__category">Build Log</span><span class="card__title">First post loading...</span><p class="card__excerpt">The blog is warming up. Check back soon.</p></div></div>
+      <div class="card"><div class="card__body"><span class="card__category">Behind the Build</span><span class="card__title">First post loading...</span><p class="card__excerpt">The blog is warming up. Check back soon.</p></div></div>
       {{ end }}
     </div>
     <div style="text-align:center;margin-top:2rem;">

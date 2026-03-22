@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Hugo: Serve (with drafts)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "hugo server --buildDrafts --watch",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

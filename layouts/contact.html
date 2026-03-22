@@ -1,68 +1,93 @@
 {{ define "main" }}
+<style>
+.si-icon {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 24px;
+  height: 24px;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+.card:hover .si-icon { opacity: 0.8; }
+.card { position: relative; }
+</style>
+
 <div class="page-hero">
   <div class="container">
-    <div class="page-hero__label">Let's talk shop</div>
-    <h1 class="page-hero__title">Get in Touch</h1>
-    <p class="page-hero__subtitle">Got a question about a build, a collab idea, or just want to talk maker stuff? I'm genuinely happy to hear from you.</p>
+    <div class="page-hero__label">Find me out there</div>
+    <h1 class="page-hero__title">Let's Connect</h1>
+    <p class="page-hero__subtitle">No contact form — just find me where I actually hang out. Pick your platform.</p>
   </div>
 </div>
 
 <section>
   <div class="container">
-    <div class="contact-grid">
-      <div>
-        <div class="contact-info__item">
-          <span class="contact-info__icon">▶</span>
-          <div>
-            <span class="contact-info__label">YouTube</span>
-            <p class="contact-info__value">Latest builds and project videos</p>
-            <a href="{{ .Site.Params.youtube }}" target="_blank" rel="noopener" style="font-size:0.85rem;">Watch →</a>
-          </div>
+    <div class="grid-3">
+
+      <a href="{{ .Site.Params.youtube }}" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/youtube/10b981" alt="YouTube">
+          <span class="card__category">Video</span>
+          <span class="card__title">YouTube</span>
+          <p class="card__excerpt">Build videos and project walkthroughs</p>
         </div>
-        <div class="contact-info__item">
-          <span class="contact-info__icon">⚡</span>
-          <div>
-            <span class="contact-info__label">Collaborations</span>
-            <p class="contact-info__value">Open to working with fellow makers, brands that align with the Teddy Spark ethos, and interesting projects.</p>
-          </div>
+      </a>
+
+      <a href="https://github.com/teddyspark" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/github/10b981" alt="GitHub">
+          <span class="card__category">Code</span>
+          <span class="card__title">GitHub</span>
+          <p class="card__excerpt">Code, configs, and project files</p>
         </div>
-        <div class="contact-info__item">
-          <span class="contact-info__icon">💬</span>
-          <div>
-            <span class="contact-info__label">Response Time</span>
-            <p class="contact-info__value">I try to reply within a few days. No promises — sometimes I'm elbow-deep in a build.</p>
-          </div>
+      </a>
+
+      <a href="https://www.thingiverse.com/buzzsurfr/designs" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/thingiverse/10b981" alt="Thingiverse">
+          <span class="card__category">3D Printing</span>
+          <span class="card__title">Thingiverse</span>
+          <p class="card__excerpt">My older 3D print designs</p>
         </div>
-      </div>
-      <div>
-        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="contact">
-          <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
-          <div class="form-group">
-            <label class="form-label" for="name">Your Name</label>
-            <input class="form-input" type="text" id="name" name="name" required placeholder="What should I call you?">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="email">Email</label>
-            <input class="form-input" type="email" id="email" name="email" required placeholder="your@email.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="subject">What's this about?</label>
-            <select class="form-input" id="subject" name="subject">
-              <option value="">Pick one...</option>
-              <option value="collab">Collaboration idea</option>
-              <option value="question">Question about a build</option>
-              <option value="feedback">Feedback or suggestion</option>
-              <option value="other">Just saying hi</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="message">Message</label>
-            <textarea class="form-textarea" id="message" name="message" required placeholder="Tell me what's on your mind..."></textarea>
-          </div>
-          <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">Send It ⚡</button>
-        </form>
-      </div>
+      </a>
+
+      <a href="https://makerworld.com/en/@buzzsurfr" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/bambulab/10b981" alt="Makerworld">
+          <span class="card__category">3D Printing</span>
+          <span class="card__title">Makerworld</span>
+          <p class="card__excerpt">My Bambu-optimized print designs</p>
+        </div>
+      </a>
+
+      <a href="https://www.printables.com/@TheoSalvo_3242383" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/printables/10b981" alt="Printables">
+          <span class="card__category">3D Printing</span>
+          <span class="card__title">Printables</span>
+          <p class="card__excerpt">My Prusa-optimized print designs</p>
+        </div>
+      </a>
+
+      <a href="https://www.ravelry.com/people/buzzsurfr" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/ravelry/10b981" alt="Ravelry">
+          <span class="card__category">Crochet</span>
+          <span class="card__title">Ravelry</span>
+          <p class="card__excerpt">Crochet patterns and projects</p>
+        </div>
+      </a>
+
+      <a href="https://stackexchange.com/users/119970/theo" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          <img class="si-icon" src="https://cdn.simpleicons.org/stackexchange/10b981" alt="Stack Exchange">
+          <span class="card__category">Community</span>
+          <span class="card__title">Stack Exchange</span>
+          <p class="card__excerpt">Questions, answers, and the occasional rabbit hole</p>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>

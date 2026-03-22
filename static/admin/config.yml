@@ -20,7 +20,7 @@ collections:
         widget: "select"
         multiple: true
         options:
-          - { label: "Build Log", value: "Build Logs" }
+          - { label: "Behind the Build", value: "Builds" }
           - { label: "Project Showcase", value: "Project Showcases" }
           - { label: "Quick Tip", value: "Quick Tips" }
           - { label: "Project Jump", value: "Project Jumps" }
@@ -39,16 +39,27 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
-      - label: "Category"
-        name: "categories"
+      - label: "Type"
+        name: "type"
         widget: "select"
         options:
-          - { label: "Project Showcase", value: "Project Showcases" }
-          - { label: "Build Log", value: "Build Logs" }
+          - { label: "Design", value: "design" }
+          - { label: "Make", value: "make" }
+          - { label: "Remix", value: "remix" }
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options:
+          - { label: "In Progress", value: "in-progress" }
+          - { label: "Finished", value: "finished" }
+          - { label: "Abandoned", value: "abandoned" }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "string", required: false }
       - label: "Tags"
         name: "tags"
         widget: "select"
         multiple: true
+        required: false
         options:
           - "3D Printing"
           - "Electronics"
@@ -59,9 +70,34 @@ collections:
           - "Crochet"
           - "Woodworking"
           - "Hardware"
-      - { label: "Featured Image", name: "image", widget: "image", required: false }
-      - { label: "Description", name: "description", widget: "string", required: false }
-      - { label: "Build Cost", name: "cost", widget: "string", required: false, hint: "e.g. ~$15 in materials" }
-      - { label: "Build Time", name: "build_time", widget: "string", required: false, hint: "e.g. Weekend build" }
-      - { label: "Build Log Link", name: "build_log", widget: "string", required: false, hint: "URL to related blog post" }
+          - "Home Automation"
+          - "Leatherworking"
+      - label: "Platform Links"
+        name: "platform_links"
+        widget: "list"
+        required: false
+        hint: "Add one entry per platform where this project is published"
+        fields:
+          - label: "Platform"
+            name: "platform"
+            widget: "select"
+            options:
+              - Ravelry
+              - Thingiverse
+              - Makerworld
+              - Printables
+              - GitHub
+              - Other
+          - { label: "URL", name: "url", widget: "string" }
+      - { label: "Original Design URL", name: "original_design_url", widget: "string", required: false, hint: "Makes and Remixes only — link to the pattern or model used" }
+      - { label: "Original Designer", name: "original_designer", widget: "string", required: false, hint: "Makes and Remixes only — credit the designer" }
+      - { label: "Published URL", name: "published_url", widget: "string", required: false, hint: "Designs only — where is this published publicly?" }
+      - label: "Availability"
+        name: "availability"
+        widget: "select"
+        required: false
+        options:
+          - { label: "Free", value: "free" }
+          - { label: "Paid", value: "paid" }
+        hint: "Designs only"
       - { label: "Body", name: "body", widget: "markdown" }
