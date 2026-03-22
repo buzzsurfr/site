@@ -6,7 +6,7 @@ title = "Teddy Spark"
   tagline = "Making useful things, one spark at a time."
   description = "Build logs, project showcases, quick tips, and honest reviews from a lifelong tinkerer."
   author = "Teddy Spark"
-  youtube = "https://youtube.com/@teddyspark"
+  youtube = "#" # "https://youtube.com/@teddyspark"
 
 [menu]
   [[menu.main]]
@@ -15,7 +15,7 @@ title = "Teddy Spark"
     weight = 2
   [[menu.main]]
     name = "Blog"
-    url = "/blog/"
+    url = "/blog/";
     weight = 3
   [[menu.main]]
     name = "Portfolio"
