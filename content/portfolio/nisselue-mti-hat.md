@@ -7,6 +7,8 @@ status: "finished"
 description: "A red Norwegian protest hat crocheted (with a knitted ribbed brim) as part of the Melt the ICE movement."
 image: "/images/uploads/nisselue-mti-hat-1.jpeg"
 tags: ["Crochet"]
+gallery:
+  - "/images/uploads/nisselue-mti-hat-1.jpeg"
 platform_links:
   - platform: "ravelry"
     url: "https://ravel.me/buzzsurfr/fr16xm"
