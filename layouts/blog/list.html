@@ -1,0 +1,59 @@
+{{ define "main" }}
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero__label">The blog</div>
+    <h1 class="page-hero__title">Build Logs & More</h1>
+    <p class="page-hero__subtitle">Build logs, quick tips, project jumps, and honest reviews. No hype, no polish — just what I'm making and learning.</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'build-logs')">Build Logs</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'project-showcases')">Project Showcases</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'quick-tips')">Quick Tips</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'project-jumps')">Project Jumps</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'honest-reviews')">Honest Reviews</button>
+    </div>
+    <div class="grid-3" id="posts-grid">
+      {{ range .Pages }}
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;" data-category="{{ range .Params.categories }}{{ . | urlize }} {{ end }}">
+        {{ if .Params.image }}
+        <div class="card__image"><img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy"></div>
+        {{ end }}
+        <div class="card__body">
+          {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
+          <span class="card__title">{{ .Title }}</span>
+          <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
+          <div class="card__meta">
+            <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+            {{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+          </div>
+        </div>
+      </a>
+      {{ else }}
+      <div class="card"><div class="card__body"><span class="card__category">Build Log</span><span class="card__title">First post loading...</span><p class="card__excerpt">The blog is warming up. Check back soon.</p></div></div>
+      {{ end }}
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="/contact/" class="btn btn--ghost">Got a question about a build? Ask me →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+function filterPosts(btn, category) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#posts-grid .card').forEach(card => {
+    if (category === 'all' || card.dataset.category.includes(category)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+{{ end }}

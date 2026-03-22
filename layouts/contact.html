@@ -1,0 +1,69 @@
+{{ define "main" }}
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero__label">Let's talk shop</div>
+    <h1 class="page-hero__title">Get in Touch</h1>
+    <p class="page-hero__subtitle">Got a question about a build, a collab idea, or just want to talk maker stuff? I'm genuinely happy to hear from you.</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info__item">
+          <span class="contact-info__icon">▶</span>
+          <div>
+            <span class="contact-info__label">YouTube</span>
+            <p class="contact-info__value">Latest builds and project videos</p>
+            <a href="{{ .Site.Params.youtube }}" target="_blank" rel="noopener" style="font-size:0.85rem;">Watch →</a>
+          </div>
+        </div>
+        <div class="contact-info__item">
+          <span class="contact-info__icon">⚡</span>
+          <div>
+            <span class="contact-info__label">Collaborations</span>
+            <p class="contact-info__value">Open to working with fellow makers, brands that align with the Teddy Spark ethos, and interesting projects.</p>
+          </div>
+        </div>
+        <div class="contact-info__item">
+          <span class="contact-info__icon">💬</span>
+          <div>
+            <span class="contact-info__label">Response Time</span>
+            <p class="contact-info__value">I try to reply within a few days. No promises — sometimes I'm elbow-deep in a build.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact">
+          <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+          <div class="form-group">
+            <label class="form-label" for="name">Your Name</label>
+            <input class="form-input" type="text" id="name" name="name" required placeholder="What should I call you?">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-input" type="email" id="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="subject">What's this about?</label>
+            <select class="form-input" id="subject" name="subject">
+              <option value="">Pick one...</option>
+              <option value="collab">Collaboration idea</option>
+              <option value="question">Question about a build</option>
+              <option value="feedback">Feedback or suggestion</option>
+              <option value="other">Just saying hi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="message">Message</label>
+            <textarea class="form-textarea" id="message" name="message" required placeholder="Tell me what's on your mind..."></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">Send It ⚡</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

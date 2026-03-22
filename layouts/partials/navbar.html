@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar__inner">
+      <a href="/" class="navbar__logo">
+        <svg class="navbar__logo-bolt" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M45 35 L155 35 L138 55 L120 55 L110 95 L140 90 L86 160 L78 160 L115 100 L88 105 L101 55 L57 55 Z"
+                fill="#10b981" stroke="#1e293b" stroke-width="3" stroke-linejoin="miter"/>
+        </svg>
+        <span class="navbar__logo-text">TEDDY SPARK</span>
+      </a>
+      <button class="navbar__menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.navbar__nav').classList.toggle('open')">☰</button>
+      <ul class="navbar__nav">
+        {{ range .Site.Menus.main }}
+        <li><a href="{{ .URL }}" {{ if eq $.RelPermalink .URL }}class="active"{{ end }}>{{ .Name }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+  </div>
+</nav>

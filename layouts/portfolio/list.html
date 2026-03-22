@@ -1,0 +1,63 @@
+{{ define "main" }}
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero__label">My work</div>
+    <h1 class="page-hero__title">Project Portfolio</h1>
+    <p class="page-hero__subtitle">A growing collection of things I've built, broken, and rebuilt. The good ones and the disasters.</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
+      <button class="filter-btn" onclick="filterPosts(this, '3d-printing')">3D Printing</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'electronics')">Electronics</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'robotics')">Robotics</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'software')">Software</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'crochet')">Crochet</button>
+    </div>
+    <div class="grid-3" id="posts-grid">
+      {{ range .Pages }}
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;" data-category="{{ range .Params.tags }}{{ . | urlize }} {{ end }}">
+        {{ if .Params.image }}
+        <div class="card__image"><img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy"></div>
+        {{ else }}
+        <div class="card__image" style="display:flex;align-items:center;justify-content:center;">
+          <svg width="40" height="40" viewBox="0 0 200 200">
+            <path d="M45 35 L155 35 L138 55 L120 55 L110 95 L140 90 L86 160 L78 160 L115 100 L88 105 L101 55 L57 55 Z"
+                  fill="#10b981" opacity="0.3"/>
+          </svg>
+        </div>
+        {{ end }}
+        <div class="card__body">
+          {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
+          <span class="card__title">{{ .Title }}</span>
+          <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
+          <div class="card__meta">
+            {{ range first 3 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ if .Params.cost }}<span>{{ .Params.cost }}</span>{{ end }}
+          </div>
+        </div>
+      </a>
+      {{ else }}
+      <div class="card"><div class="card__body"><span class="card__category">Coming Soon</span><span class="card__title">First project loading...</span><p class="card__excerpt">Portfolio is being populated. Check back soon.</p></div></div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<script>
+function filterPosts(btn, category) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#posts-grid .card').forEach(card => {
+    if (category === 'all' || card.dataset.category.includes(category)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+{{ end }}

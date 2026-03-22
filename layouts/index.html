@@ -1,0 +1,136 @@
+{{ define "main" }}
+
+<section class="hero">
+  <div class="container">
+    <div class="hero__content">
+      <div class="hero__eyebrow">teddyspark.co</div>
+      <h1 class="hero__title">MAKING <span>USEFUL</span><br>THINGS.</h1>
+      <p class="hero__tagline">Build logs, project showcases, honest reviews, and the occasional wild tangent. I make stuff and share what I learn — the good builds and the bad ones.</p>
+      <div class="hero__actions">
+        <a href="/portfolio/" class="btn btn--primary">See My Projects</a>
+        <a href="/blog/" class="btn btn--outline">Read the Blog</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header__label">What I share</div>
+      <h2 class="section-header__title">Content Pillars</h2>
+      <p class="section-header__subtitle">No niche, no apologies. If it sparks my curiosity, it ends up here.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar__icon">🔧</span>
+        <span class="pillar__title">BUILD LOGS</span>
+        <p class="pillar__desc">The full journey — failed attempts, restarts, and the moment it finally works.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">✨</span>
+        <span class="pillar__title">PROJECT SHOWCASES</span>
+        <p class="pillar__desc">Finished builds in action, with enough detail that you could make your own.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">💡</span>
+        <span class="pillar__title">QUICK TIPS</span>
+        <p class="pillar__desc">Bite-sized practical knowledge. Here's a better way to do X.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">🎯</span>
+        <span class="pillar__title">PROJECT JUMPS</span>
+        <p class="pillar__desc">Switching gears. Updates on whatever's sparking my interest this week.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">🔍</span>
+        <span class="pillar__title">HONEST REVIEWS</span>
+        <p class="pillar__desc">Real opinions on tools and materials. What's worth it, what's not.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <div class="section-header__label">Recent work</div>
+        <h2 class="section-header__title">Latest Projects</h2>
+      </div>
+      <a href="/portfolio/" class="btn btn--ghost">All Projects →</a>
+    </div>
+    <div class="grid-3">
+      {{ range first 3 (where .Site.RegularPages "Section" "portfolio") }}
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;">
+        {{ if .Params.image }}
+        <div class="card__image"><img src="{{ .Params.image }}" alt="{{ .Title }}"></div>
+        {{ else }}
+        <div class="card__image" style="display:flex;align-items:center;justify-content:center;">
+          <svg width="40" height="40" viewBox="0 0 200 200"><path d="M45 35 L155 35 L138 55 L120 55 L110 95 L140 90 L86 160 L78 160 L115 100 L88 105 L101 55 L57 55 Z" fill="#10b981" opacity="0.3"/></svg>
+        </div>
+        {{ end }}
+        <div class="card__body">
+          {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
+          <span class="card__title">{{ .Title }}</span>
+          <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
+          <div class="card__meta">
+            <span>{{ .Date.Format "Jan 2006" }}</span>
+            {{ range first 2 .Params.tags }}<span class="tag">{{ . }}</span>{{ end }}
+          </div>
+        </div>
+      </a>
+      {{ else }}
+      <div class="card"><div class="card__body"><span class="card__category">Coming Soon</span><span class="card__title">First project loading...</span><p class="card__excerpt">Check back soon — the build log is in progress.</p></div></div>
+      <div class="card"><div class="card__body"><span class="card__category">Coming Soon</span><span class="card__title">More builds incoming</span><p class="card__excerpt">This space fills up fast once the sparks start flying.</p></div></div>
+      <div class="card"><div class="card__body"><span class="card__category">Coming Soon</span><span class="card__title">Stay tuned</span><p class="card__excerpt">Follow on YouTube for the latest project updates.</p></div></div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <div class="section-header__label">From the blog</div>
+        <h2 class="section-header__title">Latest Posts</h2>
+      </div>
+      <a href="/blog/" class="btn btn--ghost">All Posts →</a>
+    </div>
+    <div class="grid-2">
+      {{ range first 2 (where .Site.RegularPages "Section" "blog") }}
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;">
+        {{ if .Params.image }}
+        <div class="card__image"><img src="{{ .Params.image }}" alt="{{ .Title }}"></div>
+        {{ end }}
+        <div class="card__body">
+          {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
+          <span class="card__title">{{ .Title }}</span>
+          <p class="card__excerpt">{{ .Summary | truncate 140 }}</p>
+          <div class="card__meta"><span>{{ .Date.Format "Jan 2, 2006" }}</span></div>
+        </div>
+      </a>
+      {{ else }}
+      <div class="card"><div class="card__body"><span class="card__category">Build Log</span><span class="card__title">First post coming soon</span><p class="card__excerpt">The blog is warming up. First build log drops soon.</p></div></div>
+      <div class="card"><div class="card__body"><span class="card__category">Quick Tip</span><span class="card__title">More posts incoming</span><p class="card__excerpt">Tips, reviews, and project jumps on the way.</p></div></div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--bg-card);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;">
+    <div>
+      <div class="section-header__label" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+        <span style="width:1.5rem;height:1px;background:var(--green);display:inline-block;"></span>
+        The person behind the sparks
+      </div>
+      <h2 style="transform:skewX(-15deg);display:block;margin-bottom:0.75rem;">I've been tinkering<br>my whole life.</h2>
+      <p style="max-width:520px;">3D printing, electronics, Arduino, Raspberry Pi, and yes — crochet. The through-line isn't the medium, it's the itch to figure things out.</p>
+    </div>
+    <a href="/about/" class="btn btn--outline">About Me →</a>
+  </div>
+</section>
+
+{{ end }}

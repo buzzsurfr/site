@@ -1,0 +1,35 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">TEDDY SPARK</div>
+        <p class="footer__tagline">{{ .Site.Params.tagline }}</p>
+        <div class="footer__social">
+          <a href="{{ .Site.Params.youtube }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div>
+        <span class="footer__nav-title">Navigate</span>
+        <ul class="footer__nav-list">
+          {{ range .Site.Menus.main }}
+          <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
+      <div>
+        <span class="footer__nav-title">Content</span>
+        <ul class="footer__nav-list">
+          <li><a href="/categories/build-logs/">Build Logs</a></li>
+          <li><a href="/categories/project-showcases/">Project Showcases</a></li>
+          <li><a href="/categories/quick-tips/">Quick Tips</a></li>
+          <li><a href="/categories/project-jumps/">Project Jumps</a></li>
+          <li><a href="/categories/honest-reviews/">Honest Reviews</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy">© {{ now.Year }} Teddy Spark. Making useful things, one spark at a time.</p>
+      <a href="/contact/" class="footer__copy" style="color: var(--green);">Get in touch →</a>
+    </div>
+  </div>
+</footer>

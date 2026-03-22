@@ -1,0 +1,24 @@
+{{ define "main" }}
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-hero__title">{{ .Title }}</h1>
+    {{ if .Description }}<p class="page-hero__subtitle">{{ .Description }}</p>{{ end }}
+  </div>
+</div>
+<section>
+  <div class="container">
+    <div class="grid-auto">
+      {{ range .Pages }}
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;">
+        <div class="card__body">
+          {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
+          <span class="card__title">{{ .Title }}</span>
+          <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
+          <div class="card__meta"><span>{{ .Date.Format "Jan 2006" }}</span></div>
+        </div>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

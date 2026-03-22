@@ -1,0 +1,67 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - label: "Category"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options:
+          - { label: "Build Log", value: "Build Logs" }
+          - { label: "Project Showcase", value: "Project Showcases" }
+          - { label: "Quick Tip", value: "Quick Tips" }
+          - { label: "Project Jump", value: "Project Jumps" }
+          - { label: "Honest Review", value: "Honest Reviews" }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "portfolio"
+    label: "Portfolio Projects"
+    folder: "content/portfolio"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - label: "Category"
+        name: "categories"
+        widget: "select"
+        options:
+          - { label: "Project Showcase", value: "Project Showcases" }
+          - { label: "Build Log", value: "Build Logs" }
+      - label: "Tags"
+        name: "tags"
+        widget: "select"
+        multiple: true
+        options:
+          - "3D Printing"
+          - "Electronics"
+          - "Arduino"
+          - "Raspberry Pi"
+          - "Robotics"
+          - "Software"
+          - "Crochet"
+          - "Woodworking"
+          - "Hardware"
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "string", required: false }
+      - { label: "Build Cost", name: "cost", widget: "string", required: false, hint: "e.g. ~$15 in materials" }
+      - { label: "Build Time", name: "build_time", widget: "string", required: false, hint: "e.g. Weekend build" }
+      - { label: "Build Log Link", name: "build_log", widget: "string", required: false, hint: "URL to related blog post" }
+      - { label: "Body", name: "body", widget: "markdown" }
