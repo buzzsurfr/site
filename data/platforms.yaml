@@ -73,3 +73,8 @@
   url: https://www.twitch.tv/buzzsurfr
   category: Video
   excerpt: Live streams of building and coding
+- name: Atomm
+  icon_url: /images/icons/atomm.svg
+  url: https://www.atomm.com/@TeddySpark
+  category: Laser
+  excerpt: A newer platform for sharing projects and connecting with makers
