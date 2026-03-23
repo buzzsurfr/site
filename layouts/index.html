@@ -115,7 +115,7 @@
         <div class="card__body">
           {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
           <span class="card__title">{{ .Title }}</span>
-          <p class="card__excerpt">{{ .Summary | truncate 140 }}</p>
+          <p class="card__excerpt">{{ with .Params.description }}{{ . | truncate 140 }}{{ else }}{{ .Summary | plainify | truncate 140 }}{{ end }}</p>
           <div class="card__meta"><span>{{ .Date.Format "Jan 2, 2006" }}</span></div>
         </div>
       </a>
