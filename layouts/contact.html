@@ -25,86 +25,16 @@
   <div class="container">
     <div class="grid-3">
 
-      <a href="{{ .Site.Params.youtube }}" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
+      {{ range .Site.Data.platforms }}
+      <a href="{{ .url }}" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
         <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/youtube/10b981" alt="YouTube">
-          <span class="card__category">Video</span>
-          <span class="card__title">YouTube</span>
-          <p class="card__excerpt">Build videos and project walkthroughs</p>
+          <img class="si-icon" src="{{ if .icon_url }}{{ .icon_url }}{{ else }}https://cdn.simpleicons.org/{{ .icon }}/10b981{{ end }}" alt="{{ .name }}">
+          <span class="card__category">{{ .category }}</span>
+          <span class="card__title">{{ .name }}</span>
+          <p class="card__excerpt">{{ .excerpt }}</p>
         </div>
       </a>
-
-      <a href="https://github.com/teddyspark" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/github/10b981" alt="GitHub">
-          <span class="card__category">Code</span>
-          <span class="card__title">GitHub</span>
-          <p class="card__excerpt">Code, configs, and project files</p>
-        </div>
-      </a>
-
-      <a href="https://www.thingiverse.com/buzzsurfr/designs" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/thingiverse/10b981" alt="Thingiverse">
-          <span class="card__category">3D Printing</span>
-          <span class="card__title">Thingiverse</span>
-          <p class="card__excerpt">My older 3D print designs</p>
-        </div>
-      </a>
-
-      <a href="https://makerworld.com/en/@buzzsurfr" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/bambulab/10b981" alt="Makerworld">
-          <span class="card__category">3D Printing</span>
-          <span class="card__title">Makerworld</span>
-          <p class="card__excerpt">My Bambu-optimized print designs</p>
-        </div>
-      </a>
-
-      <a href="https://www.printables.com/@TheoSalvo_3242383" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/printables/10b981" alt="Printables">
-          <span class="card__category">3D Printing</span>
-          <span class="card__title">Printables</span>
-          <p class="card__excerpt">My Prusa-optimized print designs</p>
-        </div>
-      </a>
-
-      <a href="https://www.ravelry.com/people/buzzsurfr" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/ravelry/10b981" alt="Ravelry">
-          <span class="card__category">Crochet</span>
-          <span class="card__title">Ravelry</span>
-          <p class="card__excerpt">Crochet patterns and projects</p>
-        </div>
-      </a>
-
-      <a href="https://stackexchange.com/users/119970/theo" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/stackexchange/10b981" alt="Stack Exchange">
-          <span class="card__category">Community</span>
-          <span class="card__title">Stack Exchange</span>
-          <p class="card__excerpt">Questions, answers, and the occasional rabbit hole</p>
-        </div>
-      </a>
-
-      <a href="https://www.facebook.com/teddyspark.co" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/facebook/10b981" alt="Facebook">
-          <span class="card__category">Community</span>
-          <span class="card__title">Facebook</span>
-          <p class="card__excerpt">Where the projects get a social life</p>
-        </div>
-      </a>
-
-      <a href="https://bsky.app/profile/teddyspark.co" target="_blank" rel="noopener" class="card" style="display:block;text-decoration:none;">
-        <div class="card__body">
-          <img class="si-icon" src="https://cdn.simpleicons.org/bluesky/10b981" alt="Facebook">
-          <span class="card__category">Community</span>
-          <span class="card__title">Bluesky</span>
-          <p class="card__excerpt">Posts, projects, and the fediverse-adjacent stuff</p>
-        </div>
-      </a>
+      {{ end }}
 
     </div>
   </div>

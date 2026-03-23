@@ -1,9 +1,75 @@
-makerworld: "bambulab"
-printables: "printables"
-thingiverse: "thingiverse"
-ravelry: "ravelry"
-github: "github"
-youtube: "youtube"
-stackexchange: "stackexchange"
-facebook: "facebook"
-bluesky: "bluesky"
+- name: YouTube
+  icon: youtube
+  url: https://youtube.com/@teddy-spark
+  category: Video
+  excerpt: Build videos and project walkthroughs
+- name: GitHub
+  icon: github
+  url: https://github.com/teddyspark
+  category: Code
+  excerpt: Code, configs, and project files
+- name: Thingiverse
+  icon: thingiverse
+  url: https://www.thingiverse.com/buzzsurfr/designs
+  category: 3D Printing
+  excerpt: My older 3D print designs
+- name: Makerworld
+  icon: bambulab
+  url: https://makerworld.com/en/@buzzsurfr
+  category: 3D Printing
+  excerpt: My Bambu-optimized print designs
+- name: Printables
+  icon: printables
+  url: https://www.printables.com/@TheoSalvo_3242383
+  category: 3D Printing
+  excerpt: My Prusa-optimized print designs
+- name: Ravelry
+  icon: ravelry
+  url: https://www.ravelry.com/people/buzzsurfr
+  category: Crochet
+  excerpt: Crochet patterns and projects
+- name: Stack Exchange
+  icon: stackexchange
+  url: https://stackexchange.com/users/119970/theo
+  category: Community
+  excerpt: Questions, answers, and the occasional rabbit hole
+- name: Facebook
+  icon: facebook
+  url: https://www.facebook.com/teddyspark.co
+  category: Community
+  excerpt: Where the projects get a social life
+- name: Bluesky
+  icon: bluesky
+  url: https://bsky.app/profile/teddyspark.co
+  category: Community
+  excerpt: Posts, projects, and the fediverse-adjacent stuff
+- name: LinkedIn
+  icon_url: https://api.iconify.design/mdi/linkedin.svg?color=%2310b981
+  url: https://www.linkedin.com/in/theodorejsalvo
+  category: Professional
+  excerpt: My professional profile and network
+- name: Discord
+  icon: discord
+  url: http://discordapp.com/users/443832401202774016
+  category: Community
+  excerpt: Chatting across maker, dev, and gaming communities
+- name: TikTok
+  icon: tiktok
+  url: https://www.tiktok.com/@buzzsurfr
+  category: Video
+  excerpt: Short-form videos and maker content
+- name: Pinterest
+  icon: pinterest
+  url: https://www.pinterest.com/buzzsurfr
+  category: Community
+  excerpt: Project inspiration and design boards
+- name: Flickr
+  icon: flickr
+  url: https://www.flickr.com/photos/buzzsurfr
+  category: Photography
+  excerpt: Project photos and maker documentation
+- name: Twitch
+  icon: twitch
+  url: https://www.twitch.tv/buzzsurfr
+  category: Video
+  excerpt: Live streams of building and coding
