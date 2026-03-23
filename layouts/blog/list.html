@@ -11,11 +11,12 @@
   <div class="container">
     <div class="filter-bar">
       <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'builds')">Behind the Build</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'project-showcases')">Project Showcases</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'quick-tips')">Quick Tips</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'project-jumps')">Project Jumps</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'honest-reviews')">Honest Reviews</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'build-log')">Behind the Build</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'project-showcase')">Project Showcases</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'quick-tip')">Quick Tips</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'project-jump')">Project Jumps</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'honest-review')">Honest Reviews</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'deep-dive')">Deep Dives</button>
     </div>
     <div class="grid-3" id="posts-grid">
       {{ range .Pages }}
@@ -26,7 +27,7 @@
         <div class="card__body">
           {{ if .Params.categories }}<span class="card__category">{{ index .Params.categories 0 }}</span>{{ end }}
           <span class="card__title">{{ .Title }}</span>
-          <p class="card__excerpt">{{ .Summary | truncate 120 }}</p>
+          <p class="card__excerpt">{{ with .Params.description }}{{ . | truncate 120 }}{{ else }}{{ .Summary | plainify | truncate 120 }}{{ end }}</p>
           <div class="card__meta">
             <span>{{ .Date.Format "Jan 2, 2006" }}</span>
             {{ range first 2 (.Params.tags | default slice) }}<span class="tag">{{ . }}</span>{{ end }}
