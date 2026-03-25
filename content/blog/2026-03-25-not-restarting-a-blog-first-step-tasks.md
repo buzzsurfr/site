@@ -1,7 +1,7 @@
 ---
 title: "Not restarting a blog. First step: tasks"
 date: 2026-03-25T12:30:00
-draft: true
+draft: false
 categories: ["Project Jumps"]
 tags: ["trello", "retool", "task-management", "low-code"]
 description: "Finding a task management setup that actually sticks, using Trello and Retool."
