@@ -40,6 +40,23 @@ After deploying:
 4. Identity tab → Invite yourself by email
 5. Visit `https://teddyspark.co/admin/` to log in and start writing
 
+## Shortcodes
+
+### `callout`
+
+Renders a styled callout box inside a blog post.
+
+```markdown
+{{</* callout type="note" */>}}
+Your message here. Markdown is supported.
+{{</* /callout */>}}
+```
+
+| `type` | Label color | Use for |
+|--------|-------------|---------|
+| `note` (default) | Green | Tips, asides, extra context |
+| `warning` | Amber | Caveats, gotchas |
+
 ## Adding content via CLI
 
 ```bash
