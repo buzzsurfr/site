@@ -1,0 +1,513 @@
+{
+  "name": "Blog Post → Social Media",
+  "nodes": [
+    {
+      "parameters": {
+        "feedUrl": "https://teddyspark.co/index.xml",
+        "pollTimes": {
+          "item": [{"mode": "everyX", "value": 30, "unit": "minutes"}]
+        }
+      },
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "name": "New Blog Post",
+      "type": "n8n-nodes-base.rssFeedTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"id": "f1", "name": "postTitle", "value": "={{ $json.title }}", "type": "string"},
+            {"id": "f2", "name": "postUrl", "value": "={{ $json.link }}", "type": "string"},
+            {"id": "f3", "name": "postDescription", "value": "={{ $json.contentSnippet || $json.description || '' }}", "type": "string"},
+            {"id": "f4", "name": "postCategories", "value": "={{ Array.isArray($json.categories) ? $json.categories.join(', ') : ($json.categories || '') }}", "type": "string"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-e1f2-4a3b-8c4d-5e6f7a8b9c0d",
+      "name": "Prepare Post Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n\nreturn [{\n  json: {\n    ...d,\n    anthropicBody: JSON.stringify({\n      model: 'claude-sonnet-4-6',\n      max_tokens: 1024,\n      messages: [{\n        role: 'user',\n        content: [\n          'You are the social media manager for Teddy Spark (teddyspark.co), a maker, tech, and DIY blog.',\n          '',\n          'A new blog post has just been published. Draft three platform-specific posts to promote it. Each post should be written for a different audience and context — not just the same text reformatted.',\n          '',\n          'Post details:',\n          'Title: ' + d.postTitle,\n          'URL: ' + d.postUrl,\n          'Description: ' + d.postDescription,\n          'Categories: ' + d.postCategories,\n          '',\n          'Platform requirements:',\n          '- facebook: Audience is hobbyists, makers, and general tech enthusiasts. Conversational and personal. Tell the story behind the build or problem solved. 100-200 words. Include the URL at the end.',\n          '- linkedin: Audience is professionals and engineers. Lead with the insight or skill. Highlight what someone could learn or apply. Professional but not corporate. Include the URL at the end. 150-250 words.',\n          '- bluesky: Audience is tech-forward early adopters and the open web crowd. Punchy, opinionated, slightly nerdy. Under 240 characters total including URL and 2-3 hashtags.',\n          '',\n          'Return ONLY a valid JSON object with exactly three keys: facebook, linkedin, bluesky.',\n          'No markdown code fences. No explanation. Just the raw JSON object.'\n        ].join('\\n')\n      }]\n    })\n  }\n}];"
+      },
+      "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
+      "name": "Build Claude Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{"name": "anthropic-version", "value": "2023-06-01"}]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.anthropicBody }}"
+      },
+      "id": "c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f",
+      "name": "Draft with Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "anthropic-api-key",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const apiResp = $input.first().json;\nconst postData = $('Prepare Post Data').first().json;\n\nlet drafts;\ntry {\n  const text = apiResp.content[0].text;\n  const cleaned = text.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```$/i, '').trim();\n  drafts = JSON.parse(cleaned);\n} catch (e) {\n  throw new Error('Failed to parse Claude response as JSON. Raw: ' + apiResp.content[0].text);\n}\n\nreturn [{\n  json: {\n    postTitle: postData.postTitle,\n    postUrl: postData.postUrl,\n    facebook: drafts.facebook,\n    linkedin: drafts.linkedin,\n    bluesky: drafts.bluesky\n  }\n}];"
+      },
+      "id": "d3e4f5a6-b7c8-4d9e-0f1a-2b3c4d5e6f7a",
+      "name": "Parse Drafts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 300]
+    },
+
+    {
+      "parameters": {
+        "sendTo": "buzzsurfr@gmail.com",
+        "subject": "=[Facebook] Review post: {{ $json.postTitle }}",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#3b5998\">Facebook Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $json.postUrl }}\">{{ $json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: hobbyists, makers, general tech enthusiasts</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f2f5;border-left:4px solid #3b5998;padding:12px 16px;margin:0 0 24px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $json.facebook }}</blockquote>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#3b5998;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n  <p style=\"color:#999;font-size:12px\">LinkedIn and Bluesky will follow separately after this decision.</p>\n</div>",
+        "options": {}
+      },
+      "id": "e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b",
+      "name": "Send Facebook Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1440, 300],
+      "credentials": {
+        "gmailOAuth2": {"id": "gmail-oauth2", "name": "Gmail OAuth2"}
+      }
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Facebook Post Review",
+        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.facebook + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
+        "responseText": "Decision saved. Workflow resuming.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Decision",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {"option": "Approve"},
+                  {"option": "Approve with edits"},
+                  {"option": "Reject"}
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Edited text",
+              "fieldType": "textarea",
+              "requiredField": false,
+              "placeholder": "Leave blank to use the AI draft. Paste your revised text here if editing."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c",
+      "name": "Facebook Form",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1680, 300],
+      "webhookId": "facebook-form-review"
+    },
+    {
+      "parameters": {
+        "jsCode": "const form = $input.first().json;\nconst drafts = $('Parse Drafts').first().json;\n\nconst editedText = (form['Edited text'] || '').trim();\nconst decision = form.Decision;\n\nreturn [{\n  json: {\n    decision,\n    shouldPost: decision !== 'Reject',\n    postText: editedText || drafts.facebook,\n    postUrl: drafts.postUrl,\n    postTitle: drafts.postTitle\n  }\n}];"
+      },
+      "id": "a1b2c3d4-e5f6-4789-abcd-ef0123456789",
+      "name": "Resolve Facebook Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1920, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [{
+            "id": "fb-condition",
+            "leftValue": "={{ $json.decision }}",
+            "rightValue": "Reject",
+            "operator": {"type": "string", "operation": "notEquals"}
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "b2c3d4e5-f6a7-4890-bcde-f01234567890",
+      "name": "IF: Post to Facebook",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2160, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $vars.FACEBOOK_PAGE_ID }}/feed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {"name": "message", "value": "={{ $json.postText }}"},
+            {"name": "link", "value": "={{ $json.postUrl }}"}
+          ]
+        }
+      },
+      "id": "c3d4e5f6-a7b8-4901-cdef-012345678901",
+      "name": "Facebook: Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2400, 160],
+      "credentials": {
+        "httpHeaderAuth": {"id": "facebook-page-token", "name": "Facebook Page Token"}
+      }
+    },
+
+    {
+      "parameters": {
+        "sendTo": "buzzsurfr@gmail.com",
+        "subject": "=[LinkedIn] Review post: {{ $('Parse Drafts').first().json.postTitle }}",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#0077b5\">LinkedIn Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $('Parse Drafts').first().json.postUrl }}\">{{ $('Parse Drafts').first().json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: professionals, engineers — insight-led, professional tone</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f7fc;border-left:4px solid #0077b5;padding:12px 16px;margin:0 0 24px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $('Parse Drafts').first().json.linkedin }}</blockquote>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#0077b5;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n  <p style=\"color:#999;font-size:12px\">Bluesky will follow separately after this decision.</p>\n</div>",
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-4012-defa-123456789012",
+      "name": "Send LinkedIn Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2640, 300],
+      "credentials": {
+        "gmailOAuth2": {"id": "gmail-oauth2", "name": "Gmail OAuth2"}
+      }
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "LinkedIn Post Review",
+        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.linkedin + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
+        "responseText": "Decision saved. Workflow resuming.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Decision",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {"option": "Approve"},
+                  {"option": "Approve with edits"},
+                  {"option": "Reject"}
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Edited text",
+              "fieldType": "textarea",
+              "requiredField": false,
+              "placeholder": "Leave blank to use the AI draft. Paste your revised text here if editing."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-4123-efab-234567890123",
+      "name": "LinkedIn Form",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2880, 300],
+      "webhookId": "linkedin-form-review"
+    },
+    {
+      "parameters": {
+        "jsCode": "const form = $input.first().json;\nconst drafts = $('Parse Drafts').first().json;\n\nconst editedText = (form['Edited text'] || '').trim();\nconst decision = form.Decision;\n\nreturn [{\n  json: {\n    decision,\n    shouldPost: decision !== 'Reject',\n    postText: editedText || drafts.linkedin,\n    postUrl: drafts.postUrl,\n    postTitle: drafts.postTitle\n  }\n}];"
+      },
+      "id": "f6a7b8c9-d0e1-4234-fabc-345678901234",
+      "name": "Resolve LinkedIn Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3120, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [{
+            "id": "li-condition",
+            "leftValue": "={{ $json.decision }}",
+            "rightValue": "Reject",
+            "operator": {"type": "string", "operation": "notEquals"}
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "a7b8c9d0-e1f2-4345-abcd-456789012345",
+      "name": "IF: Post to LinkedIn",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [3360, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{"name": "X-Restli-Protocol-Version", "value": "2.0.0"}]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ author: 'urn:li:person:' + $vars.LINKEDIN_PERSON_ID, lifecycleState: 'PUBLISHED', specificContent: { 'com.linkedin.ugc.ShareContent': { shareCommentary: { text: $json.postText }, shareMediaCategory: 'ARTICLE', media: [{ status: 'READY', originalUrl: $json.postUrl, title: { text: $json.postTitle } }] } }, visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' } }) }}"
+      },
+      "id": "b8c9d0e1-f2a3-4456-bcde-567890123456",
+      "name": "LinkedIn: Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3600, 160],
+      "credentials": {
+        "httpHeaderAuth": {"id": "linkedin-bearer-token", "name": "LinkedIn Bearer Token"}
+      }
+    },
+
+    {
+      "parameters": {
+        "sendTo": "buzzsurfr@gmail.com",
+        "subject": "=[Bluesky] Review post: {{ $('Parse Drafts').first().json.postTitle }}",
+        "emailType": "html",
+        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#0085ff\">Bluesky Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $('Parse Drafts').first().json.postUrl }}\">{{ $('Parse Drafts').first().json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: tech-forward, open web crowd — punchy, opinionated, &le;240 chars</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f6ff;border-left:4px solid #0085ff;padding:12px 16px;margin:0 0 8px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $('Parse Drafts').first().json.bluesky }}</blockquote>\n  <p style=\"color:#888;font-size:12px;margin:0 0 24px\">{{ $('Parse Drafts').first().json.bluesky.length }} / 240 chars</p>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#0085ff;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n</div>",
+        "options": {}
+      },
+      "id": "c9d0e1f2-a3b4-4567-cdef-678901234567",
+      "name": "Send Bluesky Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [3840, 300],
+      "credentials": {
+        "gmailOAuth2": {"id": "gmail-oauth2", "name": "Gmail OAuth2"}
+      }
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Bluesky Post Review",
+        "formDescription": "={{ 'Draft (' + $('Parse Drafts').first().json.bluesky.length + '/240 chars):\\n\\n' + $('Parse Drafts').first().json.bluesky + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. Keep edits under 240 characters.' }}",
+        "responseText": "Decision saved. Workflow resuming.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Decision",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {"option": "Approve"},
+                  {"option": "Approve with edits"},
+                  {"option": "Reject"}
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Edited text",
+              "fieldType": "textarea",
+              "requiredField": false,
+              "placeholder": "Leave blank to use the AI draft. Keep under 240 characters."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d0e1f2a3-b4c5-4678-defa-789012345678",
+      "name": "Bluesky Form",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [4080, 300],
+      "webhookId": "bluesky-form-review"
+    },
+    {
+      "parameters": {
+        "jsCode": "const form = $input.first().json;\nconst drafts = $('Parse Drafts').first().json;\n\nconst editedText = (form['Edited text'] || '').trim();\nconst decision = form.Decision;\n\nreturn [{\n  json: {\n    decision,\n    shouldPost: decision !== 'Reject',\n    postText: editedText || drafts.bluesky,\n    postUrl: drafts.postUrl,\n    postTitle: drafts.postTitle\n  }\n}];"
+      },
+      "id": "e1f2a3b4-c5d6-4789-efab-890123456789",
+      "name": "Resolve Bluesky Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4320, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [{
+            "id": "bs-condition",
+            "leftValue": "={{ $json.decision }}",
+            "rightValue": "Reject",
+            "operator": {"type": "string", "operation": "notEquals"}
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "f2a3b4c5-d6e7-4890-fabc-901234567890",
+      "name": "IF: Post to Bluesky",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [4560, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://bsky.social/xrpc/com.atproto.server.createSession",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {"name": "identifier", "value": "={{ $vars.BLUESKY_HANDLE }}"},
+            {"name": "password", "value": "={{ $env.BLUESKY_APP_PASSWORD }}"}
+          ]
+        }
+      },
+      "id": "a3b4c5d6-e7f8-4901-abcd-012345678901",
+      "name": "Bluesky: Auth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4800, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "const session = $input.first().json;\nconst resolved = $('Resolve Bluesky Text').first().json;\n\nreturn [{\n  json: {\n    accessJwt: session.accessJwt,\n    did: session.did,\n    blueskyBody: JSON.stringify({\n      repo: session.did,\n      collection: 'app.bsky.feed.post',\n      record: {\n        '$type': 'app.bsky.feed.post',\n        text: resolved.postText,\n        createdAt: new Date().toISOString()\n      }\n    })\n  }\n}];"
+      },
+      "id": "b4c5d6e7-f8a9-4012-bcde-123456789012",
+      "name": "Build Bluesky Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [5040, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{"name": "Authorization", "value": "=Bearer {{ $json.accessJwt }}"}]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.blueskyBody }}"
+      },
+      "id": "c5d6e7f8-a9b0-4123-cdef-234567890123",
+      "name": "Bluesky: Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [5280, 160]
+    }
+  ],
+  "connections": {
+    "New Blog Post": {
+      "main": [[{"node": "Prepare Post Data", "type": "main", "index": 0}]]
+    },
+    "Prepare Post Data": {
+      "main": [[{"node": "Build Claude Request", "type": "main", "index": 0}]]
+    },
+    "Build Claude Request": {
+      "main": [[{"node": "Draft with Claude", "type": "main", "index": 0}]]
+    },
+    "Draft with Claude": {
+      "main": [[{"node": "Parse Drafts", "type": "main", "index": 0}]]
+    },
+    "Parse Drafts": {
+      "main": [[{"node": "Send Facebook Email", "type": "main", "index": 0}]]
+    },
+    "Send Facebook Email": {
+      "main": [[{"node": "Facebook Form", "type": "main", "index": 0}]]
+    },
+    "Facebook Form": {
+      "main": [[{"node": "Resolve Facebook Text", "type": "main", "index": 0}]]
+    },
+    "Resolve Facebook Text": {
+      "main": [[{"node": "IF: Post to Facebook", "type": "main", "index": 0}]]
+    },
+    "IF: Post to Facebook": {
+      "main": [
+        [{"node": "Facebook: Post", "type": "main", "index": 0}],
+        [{"node": "Send LinkedIn Email", "type": "main", "index": 0}]
+      ]
+    },
+    "Facebook: Post": {
+      "main": [[{"node": "Send LinkedIn Email", "type": "main", "index": 0}]]
+    },
+    "Send LinkedIn Email": {
+      "main": [[{"node": "LinkedIn Form", "type": "main", "index": 0}]]
+    },
+    "LinkedIn Form": {
+      "main": [[{"node": "Resolve LinkedIn Text", "type": "main", "index": 0}]]
+    },
+    "Resolve LinkedIn Text": {
+      "main": [[{"node": "IF: Post to LinkedIn", "type": "main", "index": 0}]]
+    },
+    "IF: Post to LinkedIn": {
+      "main": [
+        [{"node": "LinkedIn: Post", "type": "main", "index": 0}],
+        [{"node": "Send Bluesky Email", "type": "main", "index": 0}]
+      ]
+    },
+    "LinkedIn: Post": {
+      "main": [[{"node": "Send Bluesky Email", "type": "main", "index": 0}]]
+    },
+    "Send Bluesky Email": {
+      "main": [[{"node": "Bluesky Form", "type": "main", "index": 0}]]
+    },
+    "Bluesky Form": {
+      "main": [[{"node": "Resolve Bluesky Text", "type": "main", "index": 0}]]
+    },
+    "Resolve Bluesky Text": {
+      "main": [[{"node": "IF: Post to Bluesky", "type": "main", "index": 0}]]
+    },
+    "IF: Post to Bluesky": {
+      "main": [
+        [{"node": "Bluesky: Auth", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Bluesky: Auth": {
+      "main": [[{"node": "Build Bluesky Post", "type": "main", "index": 0}]]
+    },
+    "Build Bluesky Post": {
+      "main": [[{"node": "Bluesky: Post", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "active": false
+}

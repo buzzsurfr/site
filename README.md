@@ -79,3 +79,57 @@ In `hugo.toml`:
 [params]
   youtube = "https://youtube.com/@YOUR_CHANNEL"
 ```
+
+## Social media automation
+
+When a new post is published (detected via RSS), an n8n workflow drafts platform-specific social posts with Claude and routes each one through a per-platform email + form review before publishing.
+
+The workflow is at [`.n8n/workflows/blog-social-media.json`](.n8n/workflows/blog-social-media.json) and is imported manually into n8n — it is not part of the Hugo build.
+
+### Flow
+
+1. RSS feed polled every 30 min — triggers on new items
+2. Claude drafts separate posts for Facebook (hobbyist/maker audience), LinkedIn (professional/insight-led), and Bluesky (punchy, open web crowd)
+3. **Sequential per-platform review:** email with the draft → form with Approve / Approve with edits / Reject
+   - *Approve* — posts as drafted
+   - *Approve with edits* — posts the text you enter in the form
+   - *Reject* — skips that platform, continues to the next
+4. Platforms run in order: Facebook → LinkedIn → Bluesky
+
+### n8n setup
+
+**Import:** Workflows → Import from File → select the JSON. n8n will prompt you to remap credentials.
+
+**Credentials to create** (Settings → Credentials):
+
+| Name in workflow | Type | Value |
+|---|---|---|
+| `Anthropic API Key` | Header Auth | Name: `x-api-key` / Value: API key |
+| `Gmail OAuth2` | Gmail OAuth2 | Google OAuth flow |
+| `LinkedIn Bearer Token` | Header Auth | Name: `Authorization` / Value: `Bearer <token>` |
+| `Facebook Page Token` | Header Auth | Name: `Authorization` / Value: `Bearer <page_token>` |
+
+**Variables to set** (Settings → Variables):
+
+| Variable | Value |
+|---|---|
+| `BLUESKY_HANDLE` | `teddyspark.co` |
+| `LINKEDIN_PERSON_ID` | Your LinkedIn member ID (from `/v2/me` API or profile URL) |
+| `FACEBOOK_PAGE_ID` | Numeric ID of your Facebook Page |
+
+`BLUESKY_APP_PASSWORD` is **not** an n8n variable — it is injected as an environment variable from 1Password via the pibernetes cluster (see below). The workflow reads it as `$env.BLUESKY_APP_PASSWORD`.
+
+### 1Password / pibernetes infrastructure
+
+n8n runs on pibernetes at `automation.salvo.services` (Tailscale). The 1Password Kubernetes Operator is already installed in the cluster. Secrets management for n8n lives in the pibernetes repo at [`cluster/apps/automation/`](https://github.com/buzzsurfr/pibernetes/tree/main/cluster/apps/automation).
+
+Create two items in the **pibernetes** 1Password vault before pushing the config:
+
+| 1Password item | Field | Value |
+|---|---|---|
+| `n8n-encryption` | `key` | Random 32+ char string — set once, never rotate |
+| `n8n-social-media` | `bluesky-app-password` | Bluesky App Password (Settings → App Passwords) |
+
+`OnePasswordItem` CRDs in `cluster/apps/automation/config/secrets.yaml` sync these to Kubernetes Secrets in the `automation` namespace. The n8n Helm values (`cluster/apps/automation/application.yaml`) inject them as `N8N_ENCRYPTION_KEY` and `BLUESKY_APP_PASSWORD` env vars.
+
+**Anthropic, LinkedIn, and Facebook** credentials are stored directly in n8n's credential store (Settings → Credentials), not as env vars, since n8n's OAuth and Header Auth credential types don't support env var references at the field level.
