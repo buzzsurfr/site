@@ -1,5 +1,5 @@
 {
-  "name": "Blog Post → Social Media",
+  "name": "Blog Post \u2192 Social Media",
   "nodes": [
     {
       "parameters": {},
@@ -55,7 +55,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const d = $input.first().json;\n\nreturn [{\n  json: {\n    ...d,\n    anthropicBody: JSON.stringify({\n      model: 'claude-sonnet-4-6',\n      max_tokens: 1024,\n      messages: [{\n        role: 'user',\n        content: [\n          'You are the social media manager for Teddy Spark (teddyspark.co), a maker, tech, and DIY blog.',\n          '',\n          'A new blog post has just been published. Draft three platform-specific posts to promote it. Each post should be written for a different audience and context — not just the same text reformatted.',\n          '',\n          'Post details:',\n          'Title: ' + d.postTitle,\n          'URL: ' + d.postUrl,\n          'Description: ' + d.postDescription,\n          'Categories: ' + d.postCategories,\n          '',\n          'Platform requirements:',\n          '- facebook: Audience is hobbyists, makers, and general tech enthusiasts. Conversational and personal. Tell the story behind the build or problem solved. 100-200 words. Include the URL at the end.',\n          '- linkedin: Audience is professionals and engineers. Lead with the insight or skill. Highlight what someone could learn or apply. Professional but not corporate. Include the URL at the end. 150-250 words.',\n          '- bluesky: Audience is tech-forward early adopters and the open web crowd. Punchy, opinionated, slightly nerdy. Under 240 characters total including URL and 2-3 hashtags.',\n          '',\n          'Return ONLY a valid JSON object with exactly three keys: facebook, linkedin, bluesky.',\n          'No markdown code fences. No explanation. Just the raw JSON object.'\n        ].join('\\n')\n      }]\n    })\n  }\n}];"
+        "jsCode": "const d = $input.first().json;\n\nreturn [{\n  json: {\n    ...d,\n    anthropicBody: JSON.stringify({\n      model: 'claude-sonnet-4-6',\n      max_tokens: 1024,\n      messages: [{\n        role: 'user',\n        content: [\n          'You are the social media manager for Teddy Spark (teddyspark.co), a maker, tech, and DIY blog.',\n          '',\n          'A new blog post has just been published. Draft three platform-specific posts to promote it. Each post should be written for a different audience and context \u2014 not just the same text reformatted.',\n          '',\n          'Post details:',\n          'Title: ' + d.postTitle,\n          'URL: ' + d.postUrl,\n          'Description: ' + d.postDescription,\n          'Categories: ' + d.postCategories,\n          '',\n          'Platform requirements:',\n          '- facebook: Audience is hobbyists, makers, and general tech enthusiasts. Conversational and personal. Tell the story behind the build or problem solved. 100-200 words. Include the URL at the end.',\n          '- linkedin: Audience is professionals and engineers. Lead with the insight or skill. Highlight what someone could learn or apply. Professional but not corporate. Include the URL at the end. 150-250 words.',\n          '- bluesky: Audience is tech-forward early adopters and the open web crowd. Punchy, opinionated, slightly nerdy. Under 240 characters total including URL and 2-3 hashtags.',\n          '',\n          'Return ONLY a valid JSON object with exactly three keys: facebook, linkedin, bluesky.',\n          'No markdown code fences. No explanation. Just the raw JSON object.'\n        ].join('\\n')\n      }]\n    })\n  }\n}];"
       },
       "id": "01306e17-767a-4cf9-a0aa-da66f9e082d8",
       "name": "Build Claude Request",
@@ -111,26 +111,52 @@
     },
     {
       "parameters": {
-        "sendTo": "buzzsurfr@gmail.com",
-        "subject": "=[Facebook] Review post: {{ $json.postTitle }}",
-        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#3b5998\">Facebook Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $json.postUrl }}\">{{ $json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: hobbyists, makers, general tech enthusiasts</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f2f5;border-left:4px solid #3b5998;padding:12px 16px;margin:0 0 24px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $json.facebook }}</blockquote>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#3b5998;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n  <p style=\"color:#999;font-size:12px\">LinkedIn and Bluesky are running in parallel — review those separately.</p>\n</div>",
-        "options": {}
+        "method": "POST",
+        "url": "https://ntfy.tail5017c.ts.net/blog-reviews",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.NTFY_TOKEN }}"
+            },
+            {
+              "name": "Title",
+              "value": "=[Facebook] Review: {{ $json.postTitle }}"
+            },
+            {
+              "name": "Tags",
+              "value": "thumbsup,thumbsdown"
+            },
+            {
+              "name": "Priority",
+              "value": "high"
+            },
+            {
+              "name": "Actions",
+              "value": "=view, Open Review Form, {{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "={{ $json.facebook }}"
       },
       "id": "be0e883d-2c32-45ba-81f3-bb1839b08506",
-      "name": "Send Facebook Email",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "name": "Facebook: Notify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         -1424,
         -80
-      ],
-      "webhookId": "9616ea79-6729-4fec-b1fc-1c22c92b5040"
+      ]
     },
     {
       "parameters": {
         "resume": "form",
         "formTitle": "Facebook Post Review",
-        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.facebook + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
+        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.facebook + '\\n\\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
         "formFields": {
           "values": [
             {
@@ -247,26 +273,52 @@
     },
     {
       "parameters": {
-        "sendTo": "buzzsurfr@gmail.com",
-        "subject": "=[LinkedIn] Review post: {{ $('Parse Drafts').first().json.postTitle }}",
-        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#0077b5\">LinkedIn Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $('Parse Drafts').first().json.postUrl }}\">{{ $('Parse Drafts').first().json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: professionals, engineers — insight-led, professional tone</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f7fc;border-left:4px solid #0077b5;padding:12px 16px;margin:0 0 24px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $('Parse Drafts').first().json.linkedin }}</blockquote>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#0077b5;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n  <p style=\"color:#999;font-size:12px\">Facebook and Bluesky are running in parallel — review those separately.</p>\n</div>",
-        "options": {}
+        "method": "POST",
+        "url": "https://ntfy.tail5017c.ts.net/blog-reviews",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.NTFY_TOKEN }}"
+            },
+            {
+              "name": "Title",
+              "value": "=[LinkedIn] Review: {{ $('Parse Drafts').first().json.postTitle }}"
+            },
+            {
+              "name": "Tags",
+              "value": "thumbsup,thumbsdown"
+            },
+            {
+              "name": "Priority",
+              "value": "high"
+            },
+            {
+              "name": "Actions",
+              "value": "=view, Open Review Form, {{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "={{ $('Parse Drafts').first().json.linkedin }}"
       },
       "id": "820d7a5c-bdaa-43dc-be45-ca6e3447b99d",
-      "name": "Send LinkedIn Email",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "name": "LinkedIn: Notify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         -1424,
         96
-      ],
-      "webhookId": "95dd8d6d-85cf-4021-b747-07b67e940d6f"
+      ]
     },
     {
       "parameters": {
         "resume": "form",
         "formTitle": "LinkedIn Post Review",
-        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.linkedin + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
+        "formDescription": "={{ 'Draft:\\n\\n' + $('Parse Drafts').first().json.linkedin + '\\n\\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\\n\\nApprove, edit, or reject below. To edit: select \"Approve with edits\" and paste your revised text.' }}",
         "formFields": {
           "values": [
             {
@@ -383,26 +435,52 @@
     },
     {
       "parameters": {
-        "sendTo": "buzzsurfr@gmail.com",
-        "subject": "=[Bluesky] Review post: {{ $('Parse Drafts').first().json.postTitle }}",
-        "message": "=<div style=\"font-family:sans-serif;max-width:600px;margin:0 auto;color:#111\">\n  <h2 style=\"color:#0085ff\">Bluesky Post Review</h2>\n  <p><strong>Post:</strong> <a href=\"{{ $('Parse Drafts').first().json.postUrl }}\">{{ $('Parse Drafts').first().json.postTitle }}</a></p>\n  <p style=\"color:#555;font-size:13px\">Audience: tech-forward, open web crowd — punchy, opinionated, &le;240 chars</p>\n\n  <h3>Draft</h3>\n  <blockquote style=\"background:#f0f6ff;border-left:4px solid #0085ff;padding:12px 16px;margin:0 0 8px;white-space:pre-wrap;font-size:14px;border-radius:0 4px 4px 0\">{{ $('Parse Drafts').first().json.bluesky }}</blockquote>\n  <p style=\"color:#888;font-size:12px;margin:0 0 24px\">{{ $('Parse Drafts').first().json.bluesky.length }} / 240 chars</p>\n\n  <hr style=\"border:none;border-top:1px solid #ddd;margin:24px 0\">\n  <p>\n    <a href=\"{{ $execution.resumeUrl }}\" style=\"display:inline-block;background:#0085ff;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:15px;font-weight:bold\">Approve / Edit / Reject</a>\n  </p>\n</div>",
-        "options": {}
+        "method": "POST",
+        "url": "https://ntfy.tail5017c.ts.net/blog-reviews",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.NTFY_TOKEN }}"
+            },
+            {
+              "name": "Title",
+              "value": "=[Bluesky] Review: {{ $('Parse Drafts').first().json.postTitle }}"
+            },
+            {
+              "name": "Tags",
+              "value": "thumbsup,thumbsdown"
+            },
+            {
+              "name": "Priority",
+              "value": "high"
+            },
+            {
+              "name": "Actions",
+              "value": "=view, Open Review Form, {{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "={{ $('Parse Drafts').first().json.bluesky }}"
       },
       "id": "18895a14-9183-41c3-b307-9e75b0c90e77",
-      "name": "Send Bluesky Email",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "name": "Bluesky: Notify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         -1424,
         272
-      ],
-      "webhookId": "d5649073-d8a9-4bc5-8357-5a2a030449ac"
+      ]
     },
     {
       "parameters": {
         "resume": "form",
         "formTitle": "Bluesky Post Review",
-        "formDescription": "={{ 'Draft (' + $('Parse Drafts').first().json.bluesky.length + '/240 chars):\\n\\n' + $('Parse Drafts').first().json.bluesky + '\\n\\n─────────────────────────\\n\\nApprove, edit, or reject below. Keep edits under 240 characters.' }}",
+        "formDescription": "={{ 'Draft (' + $('Parse Drafts').first().json.bluesky.length + '/240 chars):\\n\\n' + $('Parse Drafts').first().json.bluesky + '\\n\\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\\n\\nApprove, edit, or reject below. Keep edits under 240 characters.' }}",
         "formFields": {
           "values": [
             {
@@ -596,24 +674,24 @@
       "main": [
         [
           {
-            "node": "Send Facebook Email",
+            "node": "Facebook: Notify",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Send LinkedIn Email",
+            "node": "LinkedIn: Notify",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Send Bluesky Email",
+            "node": "Bluesky: Notify",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Facebook Email": {
+    "Facebook: Notify": {
       "main": [
         [
           {
@@ -657,7 +735,7 @@
         ]
       ]
     },
-    "Send LinkedIn Email": {
+    "LinkedIn: Notify": {
       "main": [
         [
           {
@@ -701,7 +779,7 @@
         ]
       ]
     },
-    "Send Bluesky Email": {
+    "Bluesky: Notify": {
       "main": [
         [
           {
