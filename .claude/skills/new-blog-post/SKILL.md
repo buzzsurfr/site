@@ -30,7 +30,7 @@ Help the user create and collaboratively draft a new blog post.
 
 6. **Hero image** — remind the user that hero images go in `/static/images/uploads/` at **1200×675px** (16:9). Once they provide a filename, add it to the `image:` front matter field.
 
-7. **Publish** — when the user is ready, set `draft: false`.
+7. **Publish** — when the user is ready, use the **Publish Blog Post** VSCode task (Terminal → Run Task → Publish Blog Post) with the draft file open and active. It will: unset the draft flag, commit, push, and run `netlify watch`. Stop the Hugo debug session manually first — there's no way to stop it from within a VSCode task.
 
 ## Notes
 

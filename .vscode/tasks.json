@@ -12,6 +12,44 @@
         "reveal": "silent",
         "panel": "shared"
       }
+    },
+    {
+      "label": "Unset Draft",
+      "type": "shell",
+      "command": "sed -i '' 's/^draft: true/draft: false/' \"${file}\"",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Stage and Commit Post",
+      "type": "shell",
+      "command": "TITLE=$(grep '^title:' \"${file}\" | sed 's/title: \"//;s/\"$//') && git add \"${file}\" static/images/uploads/ && git commit -m \"feat: publish '${TITLE}'\"",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Push and Watch",
+      "type": "shell",
+      "command": "git push && netlify watch",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Publish Blog Post",
+      "dependsOn": ["Unset Draft", "Stage and Commit Post", "Push and Watch"],
+      "dependsOrder": "sequence",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
     }
   ]
 }
