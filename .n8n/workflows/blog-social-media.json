@@ -2,11 +2,46 @@
   "name": "Blog Post \u2192 Social Media",
   "nodes": [
     {
-      "parameters": {},
-      "id": "3ddb7b5e-c6e1-4046-92c7-be1af5fd04a6",
-      "name": "New Blog Post",
-      "type": "n8n-nodes-base.rssFeedTrigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0000-0001-0000-a1b2c3d40001",
+      "name": "Every Hour",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3152,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://teddyspark.co/blog/index.xml"
+      },
+      "id": "a1b2c3d4-0000-0002-0000-a1b2c3d40002",
+      "name": "Fetch RSS Feed",
+      "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
+      "position": [
+        -2912,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst isFirstRun = !staticData.seenLinks;\nif (!staticData.seenLinks) staticData.seenLinks = [];\n\nconst items = $input.all();\nconst newItems = isFirstRun ? [] : items.filter(item => !staticData.seenLinks.includes(item.json.link));\n\nconst allLinks = items.map(i => i.json.link).filter(Boolean);\nstaticData.seenLinks = [...new Set([...staticData.seenLinks, ...allLinks])].slice(-200);\n\nreturn newItems;"
+      },
+      "id": "a1b2c3d4-0000-0003-0000-a1b2c3d40003",
+      "name": "Filter New Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         -2672,
         96
@@ -637,6 +672,39 @@
   ],
   "pinData": {},
   "connections": {
+    "Every Hour": {
+      "main": [
+        [
+          {
+            "node": "Fetch RSS Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch RSS Feed": {
+      "main": [
+        [
+          {
+            "node": "Filter New Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter New Posts": {
+      "main": [
+        [
+          {
+            "node": "Prepare Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Prepare Post Data": {
       "main": [
         [
