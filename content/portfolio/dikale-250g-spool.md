@@ -2,6 +2,7 @@
 title: "Dikale 250g Adapter for Bambu AMS"
 date: 2025-12-26
 draft: false
+categories: ["3D Printing"]
 project_type: "design"
 status: "finished"
 description: "An adapter that fits Dikale 250g filament spools perfectly in the Bambu AMS, using the cardboard spool's side tabs to lock in and prevent false turns."

@@ -2,6 +2,7 @@
 title: "Gridfinity Kitchen Collection"
 date: 2026-01-05T08:30:00-05:00
 draft: false
+categories: ["3D Printing"]
 project_type: "make"
 status: "finished"
 description: "Printed the full Gridfinity kitchen utensil collection for drawer organization, plus remixed my own knife tray."

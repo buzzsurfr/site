@@ -2,6 +2,7 @@
 title: "Nisselue MTI Hat"
 date: 2026-02-20T00:00:00-05:00
 draft: false
+categories: ["Crochet"]
 project_type: "make"
 status: "finished"
 description: "A red Norwegian protest hat crocheted (with a knitted ribbed brim) as part of the Melt the ICE movement."

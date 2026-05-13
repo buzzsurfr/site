@@ -12,14 +12,15 @@
     <div class="filter-bar">
       <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
       <button class="filter-btn" onclick="filterPosts(this, '3d-printing')">3D Printing</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'electronics')">Electronics</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'robotics')">Robotics</button>
-      <button class="filter-btn" onclick="filterPosts(this, 'software')">Software</button>
       <button class="filter-btn" onclick="filterPosts(this, 'crochet')">Crochet</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'code')">Code</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'laser')">Laser</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'cnc')">CNC</button>
+      <button class="filter-btn" onclick="filterPosts(this, 'leatherwork')">Leatherwork</button>
     </div>
     <div class="grid-3" id="posts-grid">
       {{ range .Pages }}
-      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;" data-category="{{ range .Params.tags }}{{ . | urlize }} {{ end }}">
+      <a href="{{ .Permalink }}" class="card" style="display:block;text-decoration:none;" data-category="{{ range .Params.categories }}{{ . | urlize }} {{ end }}">
         {{ if .Params.image }}
         <div class="card__image"><img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy"></div>
         {{ else }}
