@@ -1,7 +1,7 @@
 ---
 title: "I Stopped Waiting for the D&D Beyond API"
 date: 2026-05-16T12:00:00-04:00
-draft: false
+draft: true
 categories: ["Build Log"]
 tags: ["TTRPG", "Software", "Kubernetes", "D&D"]
 description: "I play a lot of TTRPGs across multiple systems and platforms. After years of waiting for D&D Beyond to ship an API, I built my own character tracker and ran it on pibernetes."
