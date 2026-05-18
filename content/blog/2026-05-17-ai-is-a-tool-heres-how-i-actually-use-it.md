@@ -1,7 +1,7 @@
 ---
 title: "AI Is a Tool. Here's How I Actually Use It."
 date: 2026-05-17T19:59:46-04:00
-draft: false
+draft: true
 categories: ["Deep Dive"]
 tags: ["ai", "software", "productivity"]
 description: "Every paradigm shift comes with the same two fears. Here's what I've learned about using AI intentionally--from someone who's lived through cloud, DevOps, and containers."
